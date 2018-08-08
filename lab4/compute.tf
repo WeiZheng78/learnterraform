@@ -12,6 +12,18 @@ resource "aws_instance" "web_server" {
       private_key = "${file("/home/cparent/aws_rsa")}"
   }
 
+  provisioner "file" {
+    source = "bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/bootstrap.sh",
+      "/tmp/bootstrap.sh"
+      ]
+  }
+/*
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y httpd",
@@ -22,7 +34,8 @@ resource "aws_instance" "web_server" {
       "sudo chown -R apache:www /var/www",
       "sudo chmod 770 -R /var/www"
     ]
-  }
+
+  } */
 
   provisioner "file" {
     source      = "learntf.index.html"
